@@ -2,19 +2,24 @@
 
 import os
 import sys
+import glob
 import yaml
+
 import parse
 
 
 HOME = os.environ['HOME']
-filename = os.path.join(HOME, '.config', 'shellcut.yaml')
+configdir = os.path.join(HOME, '.config', 'shellcut.d')
 
 
-y = yaml.load(open(filename))
+shortcuts = []
+for filename in glob.glob(os.path.join(configdir, '*.yaml')):
+    y = yaml.load(open(filename))
+    shortcuts.extend(y['shortcuts'])
 
 u = sys.argv[1]
 
-for cut in y['shortcuts']:
+for cut in shortcuts:
     result = parse.parse(cut['regex'], u)
     if result is not None:
         print(cut['shell'].format(*result.fixed, **result.named))
