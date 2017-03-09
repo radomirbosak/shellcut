@@ -20,7 +20,7 @@ for filename in glob.glob(os.path.join(configdir, '*.yaml')):
 u = sys.argv[1]
 
 for cut in shortcuts:
-    result = parse.parse(cut['regex'], u)
+    result = parse.parse(cut['match'], u)
     if result is not None:
         print(cut['shell'].format(*result.fixed, **result.named))
         break

@@ -1,12 +1,12 @@
 ---
 shortcuts:
 - name: Open RH bugzilla Bug
-  regex: BZ{}
+  match: BZ{}
   shell: |
     xdg-open https://bugzilla.redhat.com/show_bug.cgi?id={}
 
 - name: Clone github repo
-  regex: https://github.com/{}/{}
+  match: https://github.com/{}/{}
   shell: |
     cd /tmp/
     git clone git@github.com:{}/{}.git

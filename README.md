@@ -17,7 +17,7 @@ will clone this repo to `/tmp/` and change the directory into it. The "magic" is
 ---
 shortcuts:
 - name: Clone github repo
-  regex: https://github.com/{}/{}
+  match: https://github.com/{}/{}
   shell: |
     cd /tmp/
     git clone git@github.com:{}/{}.git
