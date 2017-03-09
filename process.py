@@ -1,9 +1,14 @@
+#!/usr/bin/python3
+
+import os
 import sys
 import yaml
 import parse
 
 
-filename = 'shortcuts.yaml'
+HOME = os.environ['HOME']
+filename = os.path.join(HOME, '.config', 'shellcut.yaml')
+
 
 y = yaml.load(open(filename))
 
