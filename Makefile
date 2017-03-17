@@ -14,6 +14,6 @@ install:
 	cp scripts/shellcut.bash $(LOCALBIN)/
 	# fish
 	if [ -d $(XDG_CONFIG_HOME)/fish/functions/ ]; then \
-		cp scripts/shellcut.fish $(XDG_CONFIG_HOME)/fish/functions/; \
+		cp scripts/shellcut.fish $(XDG_CONFIG_HOME)/fish/functions/s.fish; \
 	fi
 	@echo -e "\nPlease add 'source $(LOCALBIN)/shellcut.bash' to your .bashrc"
