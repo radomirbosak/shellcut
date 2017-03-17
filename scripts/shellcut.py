@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import re
 import os
 import sys
 import glob
@@ -28,10 +29,16 @@ def check_shortcuts(input_data, shortcuts):
     Check for each every shortcut if the input string matches it
     """
     for cut in shortcuts:
-        result = parse.parse(cut['match'], input_data)
-        if result is not None:
-            print(cut['shell'].format(*result.fixed, **result.named))
-            break
+        if 'match' in cut:
+            result = parse.parse(cut['match'], input_data)
+            if result is not None:
+                print(cut['shell'].format(*result.fixed, **result.named))
+                break
+        if 'regex' in cut:
+            match = re.match(cut['regex'], input_data)
+            if match:
+                print(cut['shell'].format(*match.groups()))
+                break
     else:
         sys.exit(1)
 
