@@ -13,7 +13,7 @@ install:
 	# bash
 	cp scripts/shellcut.bash $(LOCALBIN)/
 	# fish
-	if [ -d "$(LOCALCONFIG)/fish/functions/" ]; then \
+	if [ -d $(LOCALCONFIG)/fish/functions/ ]; then \
 		cp scripts/shellcut.fish $(LOCALCONFIG)/fish/functions/; \
 	fi
 	@echo -e "\nPlease add 'source $(LOCALBIN)/shellcut.bash' to your .bashrc"
