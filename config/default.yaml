@@ -14,4 +14,11 @@ shortcuts:
 - name: Get NVR
   regex: (\w+)-(\w+)-(\w+)$
   shell: |
-    echo "name: {0}, version: {1}, release: {2}"
+    echo "name: {0}, version: {1}, release: {2} l1"
+  label: l1
+
+- name: Get NVR2
+  regex: (\w+)-(\w+)-(\w+)$
+  shell: |
+    echo "name: {0}, version: {1}, release: {2} l2"
+  label: l2
