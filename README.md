@@ -23,3 +23,9 @@ shortcuts:
     git clone git@github.com:{}/{}.git
 
 ```
+
+## Dependencies
+
+```
+pip3 install parse xdg
+```
