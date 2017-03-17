@@ -8,9 +8,9 @@ import yaml
 
 import parse
 
+from xdg import XDG_CONFIG_HOME
 
-HOME = os.environ['HOME']
-configdir = os.path.join(HOME, '.config', 'shellcut.d')
+configdir = os.path.join(XDG_CONFIG_HOME, 'shellcut.d')
 
 
 def load_shortcuts():
