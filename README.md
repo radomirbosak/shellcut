@@ -24,8 +24,24 @@ shortcuts:
 
 ```
 
-## Dependencies
+## Installation
+```
+make install
+```
+
+### Installation Dependencies
 
 ```
 pip3 install parse xdg
+```
+
+## Testing
+```
+make test
+```
+
+### Testing dependencies
+```
+dnf install python3-autopep8 python3-flake8 colordiff
+pip3 install green
 ```

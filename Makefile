@@ -17,3 +17,9 @@ install:
 		cp scripts/shellcut.fish $(XDG_CONFIG_HOME)/fish/functions/s.fish; \
 	fi
 	@echo -e "\nPlease add 'source $(LOCALBIN)/shellcut.bash' to your .bashrc"
+
+test:
+	python3-autopep8 --diff -r scripts/ | colordiff
+	python3-autopep8 --diff -r tests/ | colordiff
+	python3-flake8 scripts/ tests/
+	green tests/
