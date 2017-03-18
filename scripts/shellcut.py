@@ -10,10 +10,10 @@ import parse
 
 from xdg import XDG_CONFIG_HOME
 
-configdir = os.path.join(XDG_CONFIG_HOME, 'shellcut.d')
+DEFAULT_CONFIG_DIR = os.path.join(XDG_CONFIG_HOME, 'shellcut.d')
 
 
-def load_shortcuts():
+def load_shortcuts(configdir):
     """
     Load shortcuts from the config directory
     """
@@ -69,7 +69,7 @@ def main():
     label = sys.argv[2] if len(sys.argv) >= 3 else None
 
     # load and check shortcuts
-    shortcuts = load_shortcuts()
+    shortcuts = load_shortcuts(DEFAULT_CONFIG_DIR)
     command_string = check_shortcuts(u, shortcuts, label=label)
 
     # if the function returned None, we have no match
