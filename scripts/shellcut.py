@@ -15,7 +15,7 @@ configdir = os.path.join(XDG_CONFIG_HOME, 'shellcut.d')
 
 def load_shortcuts():
     """
-    Load shortcuts from the ~/.config/shellcut.d/directory
+    Load shortcuts from the config directory
     """
     shortcuts = []
     for filename in glob.glob(os.path.join(configdir, '*.yaml')):
@@ -28,7 +28,7 @@ def check_shortcuts(input_data, shortcuts, label=None):
     """
     Check for each every shortcut if the input string matches it
 
-    Returns: replaced string
+    Returns: replaced shell string of the first matching pattern
     """
     possible = []
 
