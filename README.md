@@ -6,9 +6,9 @@ Automate your frequent commands by pasting a url/some string and performing a si
 
 ## Example
 
-Let's call your program `u`. Calling
+Let's call our program `s`. Calling
 ```
-$ u https://github.com/kennethreitz/requests
+$ s https://github.com/kennethreitz/requests
 ```
 
 will clone this repo to `/tmp/` and change the directory into it. The "magic" is performed with a config file like this:
