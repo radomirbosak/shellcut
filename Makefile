@@ -20,6 +20,6 @@ install:
 
 test:
 	PYTHONPATH=scripts green tests/
-	python3-autopep8 --diff -r scripts/ | colordiff
-	python3-autopep8 --diff -r tests/ | colordiff
-	python3-flake8 scripts/ tests/
+	autopep8 --diff -r scripts/ | colordiff
+	autopep8 --diff -r tests/ | colordiff
+	flake8 scripts/ tests/

@@ -42,6 +42,6 @@ make test
 
 ### Testing dependencies
 ```
-dnf install python3-autopep8 python3-flake8 colordiff
-pip3 install green
+dnf install colordiff
+pip3 install green autopep8 flake8
 ```
