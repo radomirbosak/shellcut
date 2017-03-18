@@ -4,8 +4,8 @@ import re
 import os
 import sys
 import glob
-import yaml
 
+import yaml
 import parse
 
 from xdg import XDG_CONFIG_HOME
