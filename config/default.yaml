@@ -5,11 +5,13 @@ shortcuts:
   shell: |
     xdg-open https://bugzilla.redhat.com/show_bug.cgi?id={}
 
-- name: Clone github repo
-  match: https://github.com/{}/{}
+- name: Clone a Github repo to temp directory
+  regex: ^https://github.com/([\w-]+)/([\w-]+)/.*$
   shell: |
-    cd /tmp/
-    git clone git@github.com:{}/{}.git
+    pushd /tmp/
+    git clone git@github.com:{0}/{1}.git
+    cd {1}
+  label: tmp
 
 - name: Get NVR
   regex: (\w+)-(\w+)-(\w+)$
