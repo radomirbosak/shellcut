@@ -1,0 +1,25 @@
+language: python
+
+python:
+  - "3.3"
+  - "3.4"
+
+addons:
+  apt:
+    packages:
+    - colordiff
+
+install:
+  - "pip install pyyaml"
+  - "pip install parse"
+  - "pip install xdg"
+  - "pip install green"
+  - "pip install autopep8"
+  - "pip install flake8"
+
+script:
+  - python --version
+  - PYTHONPATH=scripts green tests/
+  - autopep8 --diff -r scripts/ | colordiff
+  - autopep8 --diff -r tests/ | colordiff
+  - flake8 scripts/ tests/
