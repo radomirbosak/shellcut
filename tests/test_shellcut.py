@@ -1,3 +1,7 @@
+import os
+import textwrap
+import tempfile
+
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -93,3 +97,59 @@ class TestShellcut(TestCase):
         input_data = 'My name is not Harry Potter'
         result = shellcut.get_match(input_data, shortcut)
         self.assertIsNone(result)
+
+    def test_load_shortcuts_empty(self):
+        """
+        Test that an empty config dir loads no shortcuts
+        """
+        with tempfile.TemporaryDirectory() as tmpdir:
+            shortcuts = shellcut.load_shortcuts(tmpdir)
+            self.assertEqual(shortcuts, [])
+
+    def test_load_shortcuts_multiple_files(self):
+        """
+        Test that shortcuts are loaded correctly from multiple yaml files
+        """
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # create the first yaml file
+            content = """\
+            ---
+            shortcuts:
+            - name: harry
+              attr: value
+            - name: hagrid
+              attr: value2
+              label: giant
+            """
+            with open(os.path.join(tmpdir, 'file1.yaml'), 'w') as fd:
+                fd.write(textwrap.dedent(content))
+
+            # create the second yaml file
+            content = """\
+            ---
+            shortcuts:
+            - name: ron
+              attr: weasley
+            """
+            with open(os.path.join(tmpdir, 'file2.yaml'), 'w') as fd:
+                fd.write(textwrap.dedent(content))
+
+            # create the third (not a yaml) file
+            content = """\
+            ---
+            shortcuts:
+            - name: hermione
+              attr: granger
+            """
+            with open(os.path.join(tmpdir, 'file3.notayaml'), 'w') as fd:
+                fd.write(textwrap.dedent(content))
+
+            # expect only shortcuts from the first two files
+            expected = [
+                {'attr': 'value', 'name': 'harry'},
+                {'attr': 'value2', 'label': 'giant', 'name': 'hagrid'},
+                {'attr': 'weasley', 'name': 'ron'},
+            ]
+
+            shortcuts = shellcut.load_shortcuts(tmpdir)
+            self.assertCountEqual(shortcuts, expected)
