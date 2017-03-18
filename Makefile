@@ -19,7 +19,7 @@ install:
 	@echo -e "\nPlease add 'source $(LOCALBIN)/shellcut.bash' to your .bashrc"
 
 test:
-	green tests/
+	PYTHONPATH=scripts green tests/
 	python3-autopep8 --diff -r scripts/ | colordiff
 	python3-autopep8 --diff -r tests/ | colordiff
 	python3-flake8 scripts/ tests/
