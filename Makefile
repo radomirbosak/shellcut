@@ -23,3 +23,6 @@ test:
 	autopep8 --diff -r scripts/ | colordiff
 	autopep8 --diff -r tests/ | colordiff
 	flake8 scripts/ tests/
+
+testloop:
+	while inotifywait -q -r -e modify .; do make test; done
