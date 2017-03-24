@@ -7,16 +7,8 @@ all:
 install:
 	mkdir -p $(LOCALBIN) $(XDG_CONFIG_HOME)/shellcut.d/
 	cp config/default.yaml $(XDG_CONFIG_HOME)/shellcut.d/
-	cp scripts/shellcut.py $(LOCALBIN)/_shellcut.py
-	chmod u+x $(LOCALBIN)/_shellcut.py
-
-	# bash
-	cp scripts/shellcut.bash $(LOCALBIN)/
-	# fish
-	if [ -d $(XDG_CONFIG_HOME)/fish/functions/ ]; then \
-		cp scripts/shellcut.fish $(XDG_CONFIG_HOME)/fish/functions/s.fish; \
-	fi
-	@echo -e "\nPlease add 'source $(LOCALBIN)/shellcut.bash' to your .bashrc"
+	cp scripts/shellcut.py $(LOCALBIN)/s
+	chmod u+x $(LOCALBIN)/s
 
 test:
 	PYTHONPATH=scripts green tests/

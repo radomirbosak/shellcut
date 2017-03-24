@@ -4,6 +4,7 @@ import re
 import os
 import sys
 import glob
+import subprocess
 
 import yaml
 import parse
@@ -77,7 +78,7 @@ def main():
         sys.exit(1)
 
     # print the string, which is later interpreted by bash/fish
-    print(command_string)
+    subprocess.call(["bash", "-c", command_string])
 
 
 if __name__ == '__main__':
