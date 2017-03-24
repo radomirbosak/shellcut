@@ -44,7 +44,7 @@ def check_shortcuts(input_data, shortcuts, label=None):
     return possible[0]
 
 
-def get_match(input_data, shortcut, label=None):
+def get_match(input_data, shortcut, label=None, shell=None):
     """
     Check if 'input_data' matches the 'shortcut' pattern and if yes, return the
     substituted shell command.
@@ -52,15 +52,23 @@ def get_match(input_data, shortcut, label=None):
     if label and shortcut.get('label') != label:
         return None
 
+    # check if the pattern supports the given shell and default to 'shell'
+    if shell in shortcut:
+        script = shortcut[shell]
+    elif 'shell' in shortcut:
+        script = shortcut['shell']
+    else:
+        return None
+
     if 'match' in shortcut:
         result = parse.parse(shortcut['match'], input_data)
         if result is not None:
-            return shortcut['shell'].format(*result.fixed, **result.named)
+            return script.format(*result.fixed, **result.named)
 
     if 'regex' in shortcut:
         match = re.match(shortcut['regex'], input_data)
         if match:
-            return shortcut['shell'].format(*match.groups())
+            return script.format(*match.groups())
     return None
 
 

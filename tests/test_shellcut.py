@@ -98,6 +98,44 @@ class TestShellcut(TestCase):
         result = shellcut.get_match(input_data, shortcut)
         self.assertIsNone(result)
 
+    def test_get_match_shell_found(self):
+        """
+        Test the pattern with correct shell is returned
+        """
+        shortcut = {
+            'match': r'My name is {}dore',
+            'dash': 'echo "{}"'
+        }
+        input_data = 'My name is Dumbledore'
+        result = shellcut.get_match(input_data, shortcut, shell='dash')
+        self.assertEqual(result, 'echo "Dumble"')
+
+    def test_get_match_shell_notfound(self):
+        """
+        Test get_match returns None when appropriate shell script is not found
+        """
+        shortcut = {
+            'match': r'My name is {}dore',
+            'hash': 'echo "{}"'
+        }
+        input_data = 'My name is Dumbledore'
+        result = shellcut.get_match(input_data, shortcut, shell='dash')
+        self.assertIsNone(result)
+
+    def test_get_match_shell_default(self):
+        """
+        Test get_match defaults to 'shell', when provided shell is not
+        supported by the pattern
+        """
+        shortcut = {
+            'match': r'My name is {}dore',
+            'hash': 'echo "{}"',
+            'shell': 'touch "{}"',
+        }
+        input_data = 'My name is Dumbledore'
+        result = shellcut.get_match(input_data, shortcut, shell='dash')
+        self.assertEqual(result, 'touch "Dumble"')
+
     def test_load_shortcuts_empty(self):
         """
         Test that an empty config dir loads no shortcuts
