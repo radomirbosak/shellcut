@@ -45,5 +45,5 @@ make test
 _(some of these can be skipped)_
 ```
 dnf install colordiff inotify-tools
-pip3 install green autopep8 flake8
+pip3 install green autopep8 flake8 flake8-colors
 ```
