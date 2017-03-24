@@ -64,6 +64,14 @@ def get_match(input_data, shortcut, label=None):
     return None
 
 
+def get_active_shell():
+    env_shell = os.environ['SHELL']
+    for shell in ['bash', 'fish']:
+        if env_shell.endswith(shell):
+            return shell
+    return None
+
+
 def main():
     # load CLI arguments
     u = sys.argv[1]

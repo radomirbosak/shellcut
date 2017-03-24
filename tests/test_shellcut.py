@@ -153,3 +153,24 @@ class TestShellcut(TestCase):
 
             shortcuts = shellcut.load_shortcuts(tmpdir)
             self.assertCountEqual(shortcuts, expected)
+
+    @patch('shellcut.os.environ')
+    def test_get_active_shell_fish(self, mock_environ):
+        mock_environ.__getitem__.side_effect = ['/path/to/fish']
+
+        shell = shellcut.get_active_shell()
+        self.assertEqual(shell, 'fish')
+
+    @patch('shellcut.os.environ')
+    def test_get_active_shell_bash(self, mock_environ):
+        mock_environ.__getitem__.side_effect = ['/i/am/complicated_bash']
+
+        shell = shellcut.get_active_shell()
+        self.assertEqual(shell, 'bash')
+
+    @patch('shellcut.os.environ')
+    def test_get_active_shell_unknown(self, mock_environ):
+        mock_environ.__getitem__.side_effect = ['/some/weird/shell']
+
+        shell = shellcut.get_active_shell()
+        self.assertIsNone(shell)
