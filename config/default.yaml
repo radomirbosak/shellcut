@@ -24,3 +24,15 @@ shortcuts:
   shell: |
     echo "name: {0}, version: {1}, release: {2} l2"
   label: l2
+
+- name: Test executors
+  regex: executors
+  fish: |
+    set -l variable value
+    echo "variable 'variable' has value $variable"
+  bash: |
+    variable=value
+    echo "variable 'variable' has value $variable"
+  shell: |
+    variable=value
+    echo "variable 'variable' has value $variable"

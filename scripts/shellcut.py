@@ -25,7 +25,7 @@ def load_shortcuts(configdir):
     return shortcuts
 
 
-def check_shortcuts(input_data, shortcuts, label=None):
+def check_shortcuts(input_data, shortcuts, label=None, shell=None):
     """
     Check for each every shortcut if the input string matches it
 
@@ -34,7 +34,7 @@ def check_shortcuts(input_data, shortcuts, label=None):
     possible = []
 
     for cut in shortcuts:
-        match = get_match(input_data, cut, label)
+        match = get_match(input_data, cut, label, shell)
         if match is not None:
             possible.append(match)
 
@@ -91,16 +91,21 @@ def main():
     u = sys.argv[1]
     label = sys.argv[2] if len(sys.argv) >= 3 else None
 
+    env_shell = get_active_shell()
+
     # load and check shortcuts
     shortcuts = load_shortcuts(DEFAULT_CONFIG_DIR)
-    command_string = check_shortcuts(u, shortcuts, label=label)
+    command_string = check_shortcuts(u, shortcuts,
+                                     label=label,
+                                     shell=env_shell)
 
     # if the function returned None, we have no match
     if command_string is None:
         sys.exit(1)
 
     # print the string, which is later interpreted by bash/fish
-    subprocess.call(["bash", "-c", command_string])
+    shell_cmd = env_shell if env_shell is not None else 'sh'
+    subprocess.call([shell_cmd, "-c", command_string])
 
 
 if __name__ == '__main__':
