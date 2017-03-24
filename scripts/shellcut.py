@@ -65,6 +65,12 @@ def get_match(input_data, shortcut, label=None):
 
 
 def get_active_shell():
+    """
+    Get the shell which the user is using
+
+    Returns:
+        'bash' or 'fish' or None
+    """
     env_shell = os.environ['SHELL']
     for shell in ['bash', 'fish']:
         if env_shell.endswith(shell):

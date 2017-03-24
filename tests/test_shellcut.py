@@ -156,6 +156,9 @@ class TestShellcut(TestCase):
 
     @patch('shellcut.os.environ')
     def test_get_active_shell_fish(self, mock_environ):
+        """
+        Test that fish shell gets recognized
+        """
         mock_environ.__getitem__.side_effect = ['/path/to/fish']
 
         shell = shellcut.get_active_shell()
@@ -163,6 +166,9 @@ class TestShellcut(TestCase):
 
     @patch('shellcut.os.environ')
     def test_get_active_shell_bash(self, mock_environ):
+        """
+        Test that bash shell gets recognized
+        """
         mock_environ.__getitem__.side_effect = ['/i/am/complicated_bash']
 
         shell = shellcut.get_active_shell()
@@ -170,6 +176,9 @@ class TestShellcut(TestCase):
 
     @patch('shellcut.os.environ')
     def test_get_active_shell_unknown(self, mock_environ):
+        """
+        Test that an unknown shell returns None
+        """
         mock_environ.__getitem__.side_effect = ['/some/weird/shell']
 
         shell = shellcut.get_active_shell()
