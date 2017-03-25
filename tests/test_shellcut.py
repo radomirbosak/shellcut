@@ -364,3 +364,38 @@ class TestShellcut(TestCase):
         config_dir = shellcut.get_config_dir()
 
         self.assertEqual(config_dir, '/path/to/xdg/config')
+
+    @patch('shellcut.get_input')
+    def test_choose_match_single(self, mock_input):
+        """
+        Test correct option is chose in there is only one option
+        """
+        mock_input.return_value = 1
+        matches = [({'name': 'a'}, 'm')]
+        command = shellcut.choose_match(matches)
+        self.assertEqual(command, 'm')
+
+    @patch('shellcut.get_input')
+    def test_choose_match_multiple(self, mock_input):
+        """
+        Test choosing from multiple options
+        """
+        mock_input.return_value = 2
+        matches = [({'name': 'a'}, 'm'), ({'name': 'b'}, 'm2')]
+        command = shellcut.choose_match(matches)
+        self.assertEqual(command, 'm2')
+
+    @patch('shellcut.get_input')
+    def test_choose_match_invalid(self, mock_input):
+        """
+        Test invalid option chosen by user
+        """
+        mock_input.return_value = 3
+        matches = [({'name': 'a'}, 'm'), ({'name': 'b'}, 'm2')]
+
+        with self.assertRaises(ValueError):
+            shellcut.choose_match(matches)
+
+        mock_input.return_value = 'abc'
+        with self.assertRaises(ValueError):
+            shellcut.choose_match(matches)

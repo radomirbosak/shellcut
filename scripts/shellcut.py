@@ -122,6 +122,29 @@ def get_active_shell():
     return None
 
 
+def get_input(text):
+    """
+    Wrapper for python's input builtin
+    """
+    return input(text)
+
+
+def choose_match(possible_matches):
+    """
+    Promt user to choose from multiple matching patterns
+    """
+    print('Choose one:')
+    for i, (shortcut, match) in enumerate(possible_matches):
+        print('{}: {}'.format(i + 1, shortcut['name']))
+    answer = int(get_input('> '))
+    print(answer)
+
+    if 1 <= answer <= len(possible_matches):
+        return possible_matches[answer - 1][1]
+    else:
+        raise ValueError('Invalid choice')
+
+
 def main():
     # load CLI arguments
     u = sys.argv[1]
@@ -140,9 +163,19 @@ def main():
         print('Input matches none of the patterns')
         sys.exit(1)
 
-    _, command_string = possible_matches[0]
+    if len(possible_matches) > 1:
+        try:
+            command_string = choose_match(possible_matches)
+        except ValueError:
+            print('Invalid choice')
+            sys.exit(1)
+        except KeyboardInterrupt:
+            print('Program Interrupted')
+            sys.exit(1)
+    else:
+        _, command_string = possible_matches[0]
 
-    # print the string, which is later interpreted by bash/fish
+    # execute the script using the discovered shell (default: sh)
     shell_cmd = env_shell if env_shell is not None else 'sh'
     subprocess.call([shell_cmd, "-c", command_string])
 
