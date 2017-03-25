@@ -128,6 +128,7 @@ def main():
 
     # if the function returned None, we have no match
     if command_string is None:
+        print('Input matches none of the patterns')
         sys.exit(1)
 
     # print the string, which is later interpreted by bash/fish
