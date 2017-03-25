@@ -21,7 +21,8 @@ class TestShellcut(TestCase):
         shortcuts = ['shortcut1', 'shortcut2', 'shortcut3']
         result = shellcut.check_shortcuts('input_data', shortcuts, label=None)
 
-        self.assertEqual(result, 'shell2')
+        expected_result = [('shortcut2', 'shell2'), ('shortcut3', 'shell3')]
+        self.assertEqual(result, expected_result)
 
     def test_label_matches_no_cli_label(self):
         """

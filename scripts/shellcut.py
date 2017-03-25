@@ -35,21 +35,20 @@ def load_shortcuts(configdir):
 
 def check_shortcuts(input_data, shortcuts, label=None, shell=None):
     """
-    Check for each every shortcut if the input string matches it
+    Returns the shortcuts matching input_data
 
-    Returns: replaced shell string of the first matching pattern
+    Returns: list of pairs (shortcut, script)
+        shortcut: matched shortcut
+        script: corresponding pattern script string
     """
     possible = []
 
-    for cut in shortcuts:
-        match = get_match(input_data, cut, label, shell)
-        if match is not None:
-            possible.append(match)
+    for shortcut in shortcuts:
+        script = get_match(input_data, shortcut, label, shell)
+        if script is not None:
+            possible.append((shortcut, script))
 
-    if not possible:
-        return None
-
-    return possible[0]
+    return possible
 
 
 def label_matches(cli_label, pattern_label):
@@ -132,14 +131,16 @@ def main():
 
     # load and check shortcuts
     shortcuts = load_shortcuts(get_config_dir())
-    command_string = check_shortcuts(u, shortcuts,
-                                     label=label,
-                                     shell=env_shell)
+    possible_matches = check_shortcuts(u, shortcuts,
+                                       label=label,
+                                       shell=env_shell)
 
-    # if the function returned None, we have no match
-    if command_string is None:
+    # if the function returned no matches, exit
+    if not possible_matches:
         print('Input matches none of the patterns')
         sys.exit(1)
+
+    _, command_string = possible_matches[0]
 
     # print the string, which is later interpreted by bash/fish
     shell_cmd = env_shell if env_shell is not None else 'sh'
