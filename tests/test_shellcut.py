@@ -221,3 +221,27 @@ class TestShellcut(TestCase):
 
         shell = shellcut.get_active_shell()
         self.assertIsNone(shell)
+
+    @patch('shellcut.os.environ')
+    def test_get_config_dir_envset(self, mock_environ):
+        """
+        Test SHELLCUT_CONFIG environment variable is read
+        """
+        mock_environ.__contains__ = lambda self, x: x == 'SHELLCUT_CONFIG'
+        mock_environ.__getitem__.return_value = '/path/to/blab'
+        config_dir = shellcut.get_config_dir()
+
+        self.assertEqual(config_dir, '/path/to/blab')
+
+    @patch('shellcut.os.environ')
+    @patch('shellcut.os.path.join')
+    def test_get_config_dir_xdg(self, mock_join, mock_environ):
+        """
+        Test XDG_CONFIG_HOME variable is used if SHELLCUT_CONFIG is not
+        specified
+        """
+        mock_environ.__contains__.return_value = False
+        mock_join.return_value = '/path/to/xdg/config'
+        config_dir = shellcut.get_config_dir()
+
+        self.assertEqual(config_dir, '/path/to/xdg/config')

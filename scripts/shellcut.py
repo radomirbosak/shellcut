@@ -11,7 +11,15 @@ import parse
 
 from xdg import XDG_CONFIG_HOME
 
-DEFAULT_CONFIG_DIR = os.path.join(XDG_CONFIG_HOME, 'shellcut.d')
+
+def get_config_dir():
+    """
+    Return the config directory
+    """
+    if 'SHELLCUT_CONFIG' in os.environ:
+        return os.environ['SHELLCUT_CONFIG']
+    else:
+        return os.path.join(XDG_CONFIG_HOME, 'shellcut.d')
 
 
 def load_shortcuts(configdir):
@@ -94,7 +102,7 @@ def main():
     env_shell = get_active_shell()
 
     # load and check shortcuts
-    shortcuts = load_shortcuts(DEFAULT_CONFIG_DIR)
+    shortcuts = load_shortcuts(get_config_dir())
     command_string = check_shortcuts(u, shortcuts,
                                      label=label,
                                      shell=env_shell)
