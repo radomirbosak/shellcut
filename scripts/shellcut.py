@@ -76,7 +76,7 @@ def get_match(input_data, shortcut, label=None, shell=None):
     """
 
     # if the label does not match, return None
-    if label and not label_matches(label, shortcut.get('label')):
+    if not label_matches(label, shortcut.get('label')):
         return
 
     # check if the pattern supports the given shell and default to 'shell'
