@@ -11,7 +11,7 @@ install:
 	chmod u+x $(LOCALBIN)/s
 
 test:
-	PYTHONPATH=scripts green tests/
+	PYTHONPATH=scripts green tests/ --quiet-stdout
 	autopep8 --diff -r scripts/ | colordiff
 	autopep8 --diff -r tests/ | colordiff
 	flake8 scripts/ tests/
