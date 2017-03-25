@@ -23,6 +23,48 @@ class TestShellcut(TestCase):
 
         self.assertEqual(result, 'shell2')
 
+    def test_label_matches_no_cli_label(self):
+        """
+        Test when label is not supplied it matches anything
+        """
+        res = shellcut.label_matches(None, 'l1')
+        self.assertTrue(res)
+
+    def test_label_matches_success(self):
+        """
+        Test success if CLI label matches pattern label
+        """
+        res = shellcut.label_matches('l1', 'l1')
+        self.assertTrue(res)
+
+    def test_label_matches_fail(self):
+        """
+        Test for failure if CLI label doesn't match pattern label
+        """
+        res = shellcut.label_matches('l1', 'l2')
+        self.assertFalse(res)
+
+    def test_label_matches_multi_success(self):
+        """
+        Test for success if CLI label is in list of pattern labels
+        """
+        res = shellcut.label_matches('l1', ['l1', 'l2'])
+        self.assertTrue(res)
+
+    def test_label_matches_no_pattern_label(self):
+        """
+        Test case when CLI label is supplied, but pattern has none
+        """
+        res = shellcut.label_matches('l1', None)
+        self.assertFalse(res)
+
+    def test_label_matches_multi_fail(self):
+        """
+        Test case when CLI label does not match list of pattern labels
+        """
+        res = shellcut.label_matches('l1', ['l2', 'l3'])
+        self.assertFalse(res)
+
     def test_get_match_no_label(self):
         """
         Test that a query with specific label does not match a shortcut with no

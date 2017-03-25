@@ -52,6 +52,23 @@ def check_shortcuts(input_data, shortcuts, label=None, shell=None):
     return possible[0]
 
 
+def label_matches(cli_label, pattern_label):
+    """
+    Checks if the label provided via CLI matches the label (or list of labels)
+    from the pattern
+
+    Returns:
+        True if label matches, otherwise False
+    """
+    if not cli_label:
+        return True
+
+    if not isinstance(pattern_label, list):
+        pattern_label = [pattern_label]
+
+    return cli_label in pattern_label
+
+
 def get_match(input_data, shortcut, label=None, shell=None):
     """
     Check if 'input_data' matches the 'shortcut' pattern and if yes, return the
@@ -59,11 +76,8 @@ def get_match(input_data, shortcut, label=None, shell=None):
     """
 
     # if the label does not match, return None
-    pattern_label = shortcut.get('label')
-    if not isinstance(pattern_label, list):
-        pattern_label = [pattern_label]
-    if label and label not in pattern_label:
-        return None
+    if label and not label_matches(label, shortcut.get('label')):
+        return
 
     # check if the pattern supports the given shell and default to 'shell'
     if shell in shortcut:
