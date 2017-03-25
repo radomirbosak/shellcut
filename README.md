@@ -1,4 +1,4 @@
-# Shellcut
+# Shellcut [![Build Status](https://travis-ci.org/radomirbosak/shellcut.svg?branch=master)](https://travis-ci.org/radomirbosak/shellcut)
 
 _Shell shortcuts_
 
