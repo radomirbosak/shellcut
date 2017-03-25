@@ -57,7 +57,12 @@ def get_match(input_data, shortcut, label=None, shell=None):
     Check if 'input_data' matches the 'shortcut' pattern and if yes, return the
     substituted shell command.
     """
-    if label and shortcut.get('label') != label:
+
+    # if the label does not match, return None
+    pattern_label = shortcut.get('label')
+    if not isinstance(pattern_label, list):
+        pattern_label = [pattern_label]
+    if label and label not in pattern_label:
         return None
 
     # check if the pattern supports the given shell and default to 'shell'

@@ -50,6 +50,34 @@ class TestShellcut(TestCase):
         result = shellcut.get_match('input_data', shortcut, label='some_label')
         self.assertIsNone(result)
 
+    def test_get_match_multilabel(self):
+        """
+        Test that a pattern is picked when given label is in pattern's label
+        list
+        """
+        shortcut = {
+            'match': 'input_data',
+            'shell': 'command',
+            'label': ['l1', 'l2']
+        }
+
+        result = shellcut.get_match('input_data', shortcut, label='l2')
+        self.assertEqual(result, 'command')
+
+    def test_get_match_multilabel_fail(self):
+        """
+        Test that a pattern is not picked if given label is not in the
+        pattern's label list
+        """
+        shortcut = {
+            'match': 'input_data',
+            'shell': 'command',
+            'label': ['l1', 'l2']
+        }
+
+        result = shellcut.get_match('input_data', shortcut, label='l3')
+        self.assertIsNone(result)
+
     def test_get_match_parse_match(self):
         """
         Test that "format" matching works correctly
