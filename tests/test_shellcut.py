@@ -206,6 +206,54 @@ class TestShellcut(TestCase):
         result = shellcut.get_match(input_data, shortcut, shell='dash')
         self.assertEqual(result, 'touch "Dumble"')
 
+    def test_get_match_multiple_match(self):
+        """
+        Test one of multiple 'parse' patterns matches
+        """
+        shortcut = {
+            'match': ['m1', 'm2'],
+            'shell': 'result'
+        }
+        input_data = 'm1'
+        result = shellcut.get_match(input_data, shortcut)
+        self.assertEqual(result, 'result')
+
+    def test_get_match_multiple_match_fail(self):
+        """
+        Test one of multiple 'parse' patterns matches
+        """
+        shortcut = {
+            'match': ['m1', 'm2'],
+            'shell': 'result'
+        }
+        input_data = 'm3'
+        result = shellcut.get_match(input_data, shortcut)
+        self.assertIsNone(result)
+
+    def test_get_match_multiple_regex(self):
+        """
+        Test one of multiple 'regex' patterns matches
+        """
+        shortcut = {
+            'regex': ['m1', 'm2'],
+            'shell': 'result'
+        }
+        input_data = 'm1'
+        result = shellcut.get_match(input_data, shortcut)
+        self.assertEqual(result, 'result')
+
+    def test_get_match_multiple_regex_fail(self):
+        """
+        Test one of multiple 'regex' patterns matches
+        """
+        shortcut = {
+            'regex': ['m1', 'm2'],
+            'shell': 'result'
+        }
+        input_data = 'm3'
+        result = shellcut.get_match(input_data, shortcut)
+        self.assertIsNone(result)
+
     def test_load_shortcuts_empty(self):
         """
         Test that an empty config dir loads no shortcuts

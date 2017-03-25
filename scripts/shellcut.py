@@ -88,14 +88,24 @@ def get_match(input_data, shortcut, label=None, shell=None):
         return None
 
     if 'match' in shortcut:
-        result = parse.parse(shortcut['match'], input_data)
-        if result is not None:
-            return script.format(*result.fixed, **result.named)
+        conditions = shortcut['match']
+        if not isinstance(conditions, list):
+            conditions = [conditions]
+        # check if any condition matches
+        for condition in conditions:
+            result = parse.parse(condition, input_data)
+            if result is not None:
+                return script.format(*result.fixed, **result.named)
 
     if 'regex' in shortcut:
-        match = re.match(shortcut['regex'], input_data)
-        if match:
-            return script.format(*match.groups())
+        conditions = shortcut['regex']
+        if not isinstance(conditions, list):
+            conditions = [conditions]
+        # check if any condition matches
+        for condition in conditions:
+            match = re.match(condition, input_data)
+            if match:
+                return script.format(*match.groups())
     return None
 
 
