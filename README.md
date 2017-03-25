@@ -26,14 +26,7 @@ shortcuts:
 
 ## Installation
 ```
-make install
-```
-
-### Installation Dependencies
-
-```
-dnf install python3-pyyaml
-pip3 install parse xdg
+pip3 install . --user
 ```
 
 ## Testing
@@ -41,9 +34,15 @@ pip3 install parse xdg
 make test
 ```
 
+To continuously run tests (tests trigger on every file modification):
+```
+make testloop
+```
+
 ### Testing dependencies
 _(some of these can be skipped)_
-```
-dnf install colordiff inotify-tools
-pip3 install green autopep8 flake8 flake8-colors
+```console
+pip3 install -r requirements.txt
+dnf install colordiff
+dnf install inotify-tools  # required for testloop Makefile goal
 ```

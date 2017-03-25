@@ -2,19 +2,16 @@ LOCALBIN = ~/.local/bin
 XDG_CONFIG_HOME ?= ~/.config
 
 all:
-	@echo "make install"
-
-install:
-	mkdir -p $(LOCALBIN) $(XDG_CONFIG_HOME)/shellcut.d/
-	cp config/default.yaml $(XDG_CONFIG_HOME)/shellcut.d/
-	cp scripts/shellcut.py $(LOCALBIN)/s
-	chmod u+x $(LOCALBIN)/s
+	@echo "Available:"
+	@echo "make test"
+	@echo "make testloop"
 
 test:
-	PYTHONPATH=scripts green tests/ --quiet-stdout
-	autopep8 --diff -r scripts/ | colordiff
+	PYTHONPATH=shellcut green tests/ --quiet-stdout
+	autopep8 --diff -r shellcut/ | colordiff
 	autopep8 --diff -r tests/ | colordiff
-	flake8 scripts/ tests/
+	autopep8 --diff setup.py | colordiff
+	flake8 shellcut/ tests/ setup.py
 
 testloop:
 	while inotifywait -q -r -e modify --exclude .git .; do \

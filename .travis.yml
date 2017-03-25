@@ -10,16 +10,12 @@ addons:
     - colordiff
 
 install:
-  - "pip install pyyaml"
-  - "pip install parse"
-  - "pip install xdg"
-  - "pip install green"
-  - "pip install autopep8"
-  - "pip install flake8"
+  - "pip install -r requirements.txt"
 
 script:
   - python --version
   - PYTHONPATH=scripts green tests/ --quiet-stdout
   - autopep8 --diff -r scripts/ | colordiff
   - autopep8 --diff -r tests/ | colordiff
-  - flake8 scripts/ tests/
+  - autopep8 --diff setup.py | colordiff
+  - flake8 scripts/ tests/ setup.py

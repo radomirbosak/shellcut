@@ -9,7 +9,7 @@ import subprocess
 import yaml
 import parse
 
-from xdg import XDG_CONFIG_HOME
+from xdg import XDG_DATA_HOME
 
 
 def get_config_dir():
@@ -19,7 +19,7 @@ def get_config_dir():
     if 'SHELLCUT_CONFIG' in os.environ:
         return os.environ['SHELLCUT_CONFIG']
     else:
-        return os.path.join(XDG_CONFIG_HOME, 'shellcut.d')
+        return os.path.join(XDG_DATA_HOME, 'shellcut.d')
 
 
 def load_shortcuts(configdir):

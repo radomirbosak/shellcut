@@ -5,12 +5,12 @@ import tempfile
 from unittest import TestCase
 from unittest.mock import patch
 
-import shellcut
+from shellcut import main
 
 
 class TestShellcut(TestCase):
 
-    @patch('shellcut.get_match')
+    @patch('shellcut.main.get_match')
     def test_check_shortcuts(self, mock_get_match):
         """
         Test that check_shortcuts returns the shell string for the first
@@ -19,7 +19,7 @@ class TestShellcut(TestCase):
         mock_get_match.side_effect = [None, 'shell2', 'shell3']
 
         shortcuts = ['shortcut1', 'shortcut2', 'shortcut3']
-        result = shellcut.check_shortcuts('input_data', shortcuts, label=None)
+        result = main.check_shortcuts('input_data', shortcuts, label=None)
 
         expected_result = [('shortcut2', 'shell2'), ('shortcut3', 'shell3')]
         self.assertEqual(result, expected_result)
@@ -28,42 +28,42 @@ class TestShellcut(TestCase):
         """
         Test when label is not supplied it matches anything
         """
-        res = shellcut.label_matches(None, 'l1')
+        res = main.label_matches(None, 'l1')
         self.assertTrue(res)
 
     def test_label_matches_success(self):
         """
         Test success if CLI label matches pattern label
         """
-        res = shellcut.label_matches('l1', 'l1')
+        res = main.label_matches('l1', 'l1')
         self.assertTrue(res)
 
     def test_label_matches_fail(self):
         """
         Test for failure if CLI label doesn't match pattern label
         """
-        res = shellcut.label_matches('l1', 'l2')
+        res = main.label_matches('l1', 'l2')
         self.assertFalse(res)
 
     def test_label_matches_multi_success(self):
         """
         Test for success if CLI label is in list of pattern labels
         """
-        res = shellcut.label_matches('l1', ['l1', 'l2'])
+        res = main.label_matches('l1', ['l1', 'l2'])
         self.assertTrue(res)
 
     def test_label_matches_no_pattern_label(self):
         """
         Test case when CLI label is supplied, but pattern has none
         """
-        res = shellcut.label_matches('l1', None)
+        res = main.label_matches('l1', None)
         self.assertFalse(res)
 
     def test_label_matches_multi_fail(self):
         """
         Test case when CLI label does not match list of pattern labels
         """
-        res = shellcut.label_matches('l1', ['l2', 'l3'])
+        res = main.label_matches('l1', ['l2', 'l3'])
         self.assertFalse(res)
 
     def test_get_match_no_label(self):
@@ -76,7 +76,7 @@ class TestShellcut(TestCase):
             'shell': '',
         }
 
-        result = shellcut.get_match('input_data', shortcut, label='some_label')
+        result = main.get_match('input_data', shortcut, label='some_label')
         self.assertIsNone(result)
 
     def test_get_match_bad_label(self):
@@ -90,7 +90,7 @@ class TestShellcut(TestCase):
             'label': 'other_label'
         }
 
-        result = shellcut.get_match('input_data', shortcut, label='some_label')
+        result = main.get_match('input_data', shortcut, label='some_label')
         self.assertIsNone(result)
 
     def test_get_match_multilabel(self):
@@ -104,7 +104,7 @@ class TestShellcut(TestCase):
             'label': ['l1', 'l2']
         }
 
-        result = shellcut.get_match('input_data', shortcut, label='l2')
+        result = main.get_match('input_data', shortcut, label='l2')
         self.assertEqual(result, 'command')
 
     def test_get_match_multilabel_fail(self):
@@ -118,7 +118,7 @@ class TestShellcut(TestCase):
             'label': ['l1', 'l2']
         }
 
-        result = shellcut.get_match('input_data', shortcut, label='l3')
+        result = main.get_match('input_data', shortcut, label='l3')
         self.assertIsNone(result)
 
     def test_get_match_parse_match(self):
@@ -130,7 +130,7 @@ class TestShellcut(TestCase):
             'shell': 'echo "Hello {}!"',
         }
         input_data = 'My name is Harry Potter'
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertEqual(result, 'echo "Hello Harry!"')
 
     def test_get_match_parse_regex(self):
@@ -142,7 +142,7 @@ class TestShellcut(TestCase):
             'shell': 'echo "Hello {}!"',
         }
         input_data = 'My name is Harry Potter'
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertEqual(result, 'echo "Hello Harry!"')
 
     def test_get_match_parse_no_match(self):
@@ -154,7 +154,7 @@ class TestShellcut(TestCase):
             'shell': 'echo "Hello {}!"',
         }
         input_data = "My name isn't Harry Potter"
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertIsNone(result)
 
     def test_get_match_regex_no_match(self):
@@ -166,7 +166,7 @@ class TestShellcut(TestCase):
             'shell': 'echo "Hello {}!"',
         }
         input_data = 'My name is not Harry Potter'
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertIsNone(result)
 
     def test_get_match_shell_found(self):
@@ -178,7 +178,7 @@ class TestShellcut(TestCase):
             'dash': 'echo "{}"'
         }
         input_data = 'My name is Dumbledore'
-        result = shellcut.get_match(input_data, shortcut, shell='dash')
+        result = main.get_match(input_data, shortcut, shell='dash')
         self.assertEqual(result, 'echo "Dumble"')
 
     def test_get_match_shell_notfound(self):
@@ -190,7 +190,7 @@ class TestShellcut(TestCase):
             'hash': 'echo "{}"'
         }
         input_data = 'My name is Dumbledore'
-        result = shellcut.get_match(input_data, shortcut, shell='dash')
+        result = main.get_match(input_data, shortcut, shell='dash')
         self.assertIsNone(result)
 
     def test_get_match_shell_default(self):
@@ -204,7 +204,7 @@ class TestShellcut(TestCase):
             'shell': 'touch "{}"',
         }
         input_data = 'My name is Dumbledore'
-        result = shellcut.get_match(input_data, shortcut, shell='dash')
+        result = main.get_match(input_data, shortcut, shell='dash')
         self.assertEqual(result, 'touch "Dumble"')
 
     def test_get_match_multiple_match(self):
@@ -216,7 +216,7 @@ class TestShellcut(TestCase):
             'shell': 'result'
         }
         input_data = 'm1'
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertEqual(result, 'result')
 
     def test_get_match_multiple_match_fail(self):
@@ -228,7 +228,7 @@ class TestShellcut(TestCase):
             'shell': 'result'
         }
         input_data = 'm3'
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertIsNone(result)
 
     def test_get_match_multiple_regex(self):
@@ -240,7 +240,7 @@ class TestShellcut(TestCase):
             'shell': 'result'
         }
         input_data = 'm1'
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertEqual(result, 'result')
 
     def test_get_match_multiple_regex_fail(self):
@@ -252,7 +252,7 @@ class TestShellcut(TestCase):
             'shell': 'result'
         }
         input_data = 'm3'
-        result = shellcut.get_match(input_data, shortcut)
+        result = main.get_match(input_data, shortcut)
         self.assertIsNone(result)
 
     def test_load_shortcuts_empty(self):
@@ -260,7 +260,7 @@ class TestShellcut(TestCase):
         Test that an empty config dir loads no shortcuts
         """
         with tempfile.TemporaryDirectory() as tmpdir:
-            shortcuts = shellcut.load_shortcuts(tmpdir)
+            shortcuts = main.load_shortcuts(tmpdir)
             self.assertEqual(shortcuts, [])
 
     def test_load_shortcuts_multiple_files(self):
@@ -308,52 +308,52 @@ class TestShellcut(TestCase):
                 {'attr': 'weasley', 'name': 'ron'},
             ]
 
-            shortcuts = shellcut.load_shortcuts(tmpdir)
+            shortcuts = main.load_shortcuts(tmpdir)
             self.assertCountEqual(shortcuts, expected)
 
-    @patch('shellcut.os.environ')
+    @patch('shellcut.main.os.environ')
     def test_get_active_shell_fish(self, mock_environ):
         """
         Test that fish shell gets recognized
         """
         mock_environ.__getitem__.side_effect = ['/path/to/fish']
 
-        shell = shellcut.get_active_shell()
+        shell = main.get_active_shell()
         self.assertEqual(shell, 'fish')
 
-    @patch('shellcut.os.environ')
+    @patch('shellcut.main.os.environ')
     def test_get_active_shell_bash(self, mock_environ):
         """
         Test that bash shell gets recognized
         """
         mock_environ.__getitem__.side_effect = ['/i/am/complicated_bash']
 
-        shell = shellcut.get_active_shell()
+        shell = main.get_active_shell()
         self.assertEqual(shell, 'bash')
 
-    @patch('shellcut.os.environ')
+    @patch('shellcut.main.os.environ')
     def test_get_active_shell_unknown(self, mock_environ):
         """
         Test that an unknown shell returns None
         """
         mock_environ.__getitem__.side_effect = ['/some/weird/shell']
 
-        shell = shellcut.get_active_shell()
+        shell = main.get_active_shell()
         self.assertIsNone(shell)
 
-    @patch('shellcut.os.environ')
+    @patch('shellcut.main.os.environ')
     def test_get_config_dir_envset(self, mock_environ):
         """
         Test SHELLCUT_CONFIG environment variable is read
         """
         mock_environ.__contains__ = lambda self, x: x == 'SHELLCUT_CONFIG'
         mock_environ.__getitem__.return_value = '/path/to/blab'
-        config_dir = shellcut.get_config_dir()
+        config_dir = main.get_config_dir()
 
         self.assertEqual(config_dir, '/path/to/blab')
 
-    @patch('shellcut.os.environ')
-    @patch('shellcut.os.path.join')
+    @patch('shellcut.main.os.environ')
+    @patch('shellcut.main.os.path.join')
     def test_get_config_dir_xdg(self, mock_join, mock_environ):
         """
         Test XDG_CONFIG_HOME variable is used if SHELLCUT_CONFIG is not
@@ -361,31 +361,31 @@ class TestShellcut(TestCase):
         """
         mock_environ.__contains__.return_value = False
         mock_join.return_value = '/path/to/xdg/config'
-        config_dir = shellcut.get_config_dir()
+        config_dir = main.get_config_dir()
 
         self.assertEqual(config_dir, '/path/to/xdg/config')
 
-    @patch('shellcut.get_input')
+    @patch('shellcut.main.get_input')
     def test_choose_match_single(self, mock_input):
         """
         Test correct option is chose in there is only one option
         """
         mock_input.return_value = 1
         matches = [({'name': 'a'}, 'm')]
-        command = shellcut.choose_match(matches)
+        command = main.choose_match(matches)
         self.assertEqual(command, 'm')
 
-    @patch('shellcut.get_input')
+    @patch('shellcut.main.get_input')
     def test_choose_match_multiple(self, mock_input):
         """
         Test choosing from multiple options
         """
         mock_input.return_value = 2
         matches = [({'name': 'a'}, 'm'), ({'name': 'b'}, 'm2')]
-        command = shellcut.choose_match(matches)
+        command = main.choose_match(matches)
         self.assertEqual(command, 'm2')
 
-    @patch('shellcut.get_input')
+    @patch('shellcut.main.get_input')
     def test_choose_match_invalid(self, mock_input):
         """
         Test invalid option chosen by user
@@ -394,8 +394,8 @@ class TestShellcut(TestCase):
         matches = [({'name': 'a'}, 'm'), ({'name': 'b'}, 'm2')]
 
         with self.assertRaises(ValueError):
-            shellcut.choose_match(matches)
+            main.choose_match(matches)
 
         mock_input.return_value = 'abc'
         with self.assertRaises(ValueError):
-            shellcut.choose_match(matches)
+            main.choose_match(matches)
