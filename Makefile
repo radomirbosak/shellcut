@@ -17,4 +17,6 @@ test:
 	flake8 scripts/ tests/
 
 testloop:
-	while inotifywait -q -r -e modify --exclude .git .; do make test; done
+	while inotifywait -q -r -e modify --exclude .git .; do \
+		clear; make test; \
+	done
