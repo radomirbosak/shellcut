@@ -4,7 +4,7 @@ setup(
     name='shellcut',
     version='0.1.0',
     packages=['shellcut'],
-    data_files=[('share/shellcut.d', ['shellcut/config/default.yaml'])],
+    package_data={'': ['config/default.yaml']},
     entry_points={
         'console_scripts': [
             's = shellcut.main:main'
