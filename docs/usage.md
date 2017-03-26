@@ -6,7 +6,7 @@ _shellcut_ uses two syntaxes to define a pattern:
 * python format syntax _(keyword: match)_
 
 The two patterns in following example config file match the same inputs:
-```
+```yaml
 ---
 shortcuts:
 - name: Describe person
@@ -23,7 +23,7 @@ shortcuts:
 ```
 
 You can refer to match groups by their name and position:
-```
+```yaml
 ---
 shortcuts:
 - name: Describe person
@@ -84,7 +84,7 @@ _shellcut_ loads shortcut patterns from _.yaml_ files which it searches for in a
 
 Config files must have the yaml syntax and can be of this form:
 
-```
+```yaml
 ---
 shortcuts:
 - name: Pattern name
