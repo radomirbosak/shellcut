@@ -22,7 +22,6 @@ shortcuts:
   shell: |
     cd /tmp/
     git clone git@github.com:{}/{}.git
-
 ```
 
 For more examples, navigate to [documentation](docs/usage.md).
