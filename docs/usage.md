@@ -12,17 +12,18 @@ shortcuts:
 - name: Describe person
   match: Hello, my name is {} and I am {} years old
   shell: |
-  	echo Name: {}
-  	echo Age: {}
+    echo Name: {}
+    echo Age: {}
 
 - name: Describe person
   regex: Hello, my name is (.*?) and I am (.*?) years old
   shell: |
-  	echo Name: {}
-  	echo Age: {}
+    echo Name: {}
+    echo Age: {}
 ```
 
 You can refer to match groups by their name and position:
+```
 ---
 shortcuts:
 - name: Describe person
@@ -73,3 +74,28 @@ Choose one:
 2
 .bashrc backed up to /tmp
 ```
+
+## Configuration files
+
+_shellcut_ loads shortcut patterns from _.yaml_ files which it searches for in all of the following directories:
+* `~/.config/`
+* `$SHELLCUT_CONFIG/`  _(if the environment variable is set)_
+* `<shellcut_module_installation_path>/config`
+
+Config files must have the yaml syntax and can be of this form:
+
+```
+---
+shortcuts:
+- name: Pattern name
+  match: Format-type match pattern
+  regex: Regex-type match pattern
+  shell: |
+    echo "These commands are executed"
+    echo "When the command input matches one of the patterns"
+  label:
+  - LABEL1
+  - LABEL2
+```
+
+The "label" key can either contain a string or a list of strings.

@@ -13,9 +13,6 @@ $ s https://github.com/kennethreitz/requests
 
 will clone this repo to `/tmp/` and change the directory into it. The "magic" is performed with a config file like this:
 
-```console
-$ cat ~/.config/shellcut/default.yaml
-```
 ```yaml
 ---
 shortcuts:
