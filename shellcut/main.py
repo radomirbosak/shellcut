@@ -9,27 +9,39 @@ import subprocess
 import yaml
 import parse
 
-from xdg import XDG_DATA_HOME
+from xdg import XDG_CONFIG_HOME
 
 
-def get_config_dir():
+def get_config_dirs():
     """
-    Return the config directory
+    Return the list of directories to search configs in
     """
+    config_dirs = list()
+
+    # search the directory determined by SHELLCUT_CONFIG env var
     if 'SHELLCUT_CONFIG' in os.environ:
-        return os.environ['SHELLCUT_CONFIG']
-    else:
-        return os.path.join(XDG_DATA_HOME, 'shellcut.d')
+        config_dirs.append(os.environ['SHELLCUT_CONFIG'])
+
+    # search config/ in the current module
+    current_dir = os.path.dirname(__file__)
+    config_dirs.append(
+        os.path.join(current_dir, 'config'))
+
+    # search ~/.config
+    config_dirs.append(
+        os.path.join(XDG_CONFIG_HOME, 'shellcut'))
+    return config_dirs
 
 
-def load_shortcuts(configdir):
+def load_shortcuts(configdirs):
     """
     Load shortcuts from the config directory
     """
     shortcuts = []
-    for filename in glob.glob(os.path.join(configdir, '*.yaml')):
-        y = yaml.load(open(filename))
-        shortcuts.extend(y['shortcuts'])
+    for configdir in configdirs:
+        for filename in glob.glob(os.path.join(configdir, '*.yaml')):
+            y = yaml.load(open(filename))
+            shortcuts.extend(y['shortcuts'])
     return shortcuts
 
 
@@ -153,7 +165,7 @@ def main():
     env_shell = get_active_shell()
 
     # load and check shortcuts
-    shortcuts = load_shortcuts(get_config_dir())
+    shortcuts = load_shortcuts(get_config_dirs())
     possible_matches = check_shortcuts(u, shortcuts,
                                        label=label,
                                        shell=env_shell)
