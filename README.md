@@ -6,13 +6,16 @@ Automate your frequent commands by pasting a url/some string and performing a si
 
 ## Example
 
-Let's call our program `s`. Calling
+Shellcut installs a program called `s`. Calling
 ```
 $ s https://github.com/kennethreitz/requests
 ```
 
 will clone this repo to `/tmp/` and change the directory into it. The "magic" is performed with a config file like this:
 
+```console
+$ cat ~/.config/shellcut/default.yaml
+```
 ```yaml
 ---
 shortcuts:
@@ -24,18 +27,63 @@ shortcuts:
 
 ```
 
+Or maybe you just want to define some aliases, but not mess with the global program namespace?
+
+If there are multiple patterns matching the input, e.g. from a config file like this:
+```yaml
+---
+shortcuts:
+- name: Edit .bashrc
+  regex: ^bashrc$
+  shell: vim ~/.bashrc
+  label: edit
+
+- name: Backup .bashrc
+  regex: ^bashrc$
+  shell: |
+    mkdir -p /tmp/backup
+    cp ~/.bashrc /tmp/backup
+    echo ".bashrc backed up to /tmp"
+  label: backup
+```
+_shellcut_ prompt you to choose the right action:
+```console
+$ s bashrc
+Choose one:
+1: Edit .bashrc
+2: Backup .bashrc
+> 2
+2
+.bashrc backed up to /tmp
+```
+
+You can make it clear by specifying a label:
+```console
+$ s bashrc backup
+Choose one:
+1: Edit .bashrc
+2: Backup .bashrc
+> 2
+2
+.bashrc backed up to /tmp
+```
+
 ## Installation
 ```
 pip3 install . --user
 ```
 
 ## Testing
-```
+```console
 make test
+```
+or
+```console
+tox
 ```
 
 To continuously run tests (tests trigger on every file modification):
-```
+```console
 make testloop
 ```
 
