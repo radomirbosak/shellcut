@@ -13,5 +13,6 @@ setup(
     install_requires=[
         "parse",
         "xdg",
+        "pyyaml",
     ]
 )
