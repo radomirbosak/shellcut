@@ -19,7 +19,7 @@ $ cat ~/.config/shellcut/my-shortcuts.yaml
 shortcuts:
 - name: Clone github repo
   match: https://github.com/{}/{}
-  shell: |
+  bash: |
     cd /tmp/
     git clone git@github.com:{}/{}.git
 ```
