@@ -1,6 +1,3 @@
-LOCALBIN = ~/.local/bin
-XDG_CONFIG_HOME ?= ~/.config
-
 all:
 	@echo "Available:"
 	@echo "make test"
