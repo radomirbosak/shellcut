@@ -16,12 +16,16 @@ class TestShellcut(TestCase):
         Test that check_shortcuts returns the shell string for the first
         matching shortcut
         """
-        mock_get_match.side_effect = [None, 'shell2', 'shell3']
+        mock_get_match.side_effect = [
+            {},
+            {'shell': 'command2'},
+            {'shell3': 'command3'}
+        ]
 
         shortcuts = ['shortcut1', 'shortcut2', 'shortcut3']
         result = main.check_shortcuts('input_data', shortcuts, label=None)
 
-        expected_result = [('shortcut2', 'shell2'), ('shortcut3', 'shell3')]
+        expected_result = [('shortcut2', 'command2')]
         self.assertEqual(result, expected_result)
 
     def test_label_matches_no_cli_label(self):
@@ -105,7 +109,7 @@ class TestShellcut(TestCase):
         }
 
         result = main.get_match('input_data', shortcut, label='l2')
-        self.assertEqual(result, 'command')
+        self.assertEqual(result, {'shell': 'command'})
 
     def test_get_match_multilabel_fail(self):
         """
@@ -131,7 +135,7 @@ class TestShellcut(TestCase):
         }
         input_data = 'My name is Harry Potter'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, 'echo "Hello Harry!"')
+        self.assertEqual(result, {'shell': 'echo "Hello Harry!"'})
 
     def test_get_match_parse_regex(self):
         """
@@ -143,7 +147,7 @@ class TestShellcut(TestCase):
         }
         input_data = 'My name is Harry Potter'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, 'echo "Hello Harry!"')
+        self.assertEqual(result, {'shell': 'echo "Hello Harry!"'})
 
     def test_get_match_parse_no_match(self):
         """
@@ -169,44 +173,6 @@ class TestShellcut(TestCase):
         result = main.get_match(input_data, shortcut)
         self.assertIsNone(result)
 
-    def test_get_match_shell_found(self):
-        """
-        Test the pattern with correct shell is returned
-        """
-        shortcut = {
-            'match': r'My name is {}dore',
-            'dash': 'echo "{}"'
-        }
-        input_data = 'My name is Dumbledore'
-        result = main.get_match(input_data, shortcut, shell='dash')
-        self.assertEqual(result, 'echo "Dumble"')
-
-    def test_get_match_shell_notfound(self):
-        """
-        Test get_match returns None when appropriate shell script is not found
-        """
-        shortcut = {
-            'match': r'My name is {}dore',
-            'hash': 'echo "{}"'
-        }
-        input_data = 'My name is Dumbledore'
-        result = main.get_match(input_data, shortcut, shell='dash')
-        self.assertIsNone(result)
-
-    def test_get_match_shell_default(self):
-        """
-        Test get_match defaults to 'shell', when provided shell is not
-        supported by the pattern
-        """
-        shortcut = {
-            'match': r'My name is {}dore',
-            'hash': 'echo "{}"',
-            'shell': 'touch "{}"',
-        }
-        input_data = 'My name is Dumbledore'
-        result = main.get_match(input_data, shortcut, shell='dash')
-        self.assertEqual(result, 'touch "Dumble"')
-
     def test_get_match_multiple_match(self):
         """
         Test one of multiple 'parse' patterns matches
@@ -217,7 +183,7 @@ class TestShellcut(TestCase):
         }
         input_data = 'm1'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, 'result')
+        self.assertEqual(result, {'shell': 'result'})
 
     def test_get_match_multiple_match_fail(self):
         """
@@ -241,7 +207,7 @@ class TestShellcut(TestCase):
         }
         input_data = 'm1'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, 'result')
+        self.assertEqual(result, {'shell': 'result'})
 
     def test_get_match_multiple_regex_fail(self):
         """

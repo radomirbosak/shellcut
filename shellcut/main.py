@@ -13,6 +13,9 @@ import parse
 from xdg import XDG_CONFIG_HOME
 
 
+AVAILABLE_EXECUTORS = ['bash', 'fish', 'shell', 'python']
+
+
 def get_config_dirs():
     """
     Return the list of directories to search configs in
@@ -57,9 +60,18 @@ def check_shortcuts(input_data, shortcuts, label=None, shell=None):
     possible = []
 
     for shortcut in shortcuts:
-        script = get_match(input_data, shortcut, label, shell)
-        if script is not None:
-            possible.append((shortcut, script))
+        executor_map = get_match(input_data, shortcut, label)
+        # check if the pattern supports the given shell and default to 'shell'
+        if executor_map is None:
+            continue
+        elif shell in executor_map:
+            script = executor_map[shell]
+        elif 'shell' in executor_map:
+            script = executor_map['shell']
+        else:
+            continue
+
+        possible.append((shortcut, script))
 
     return possible
 
@@ -78,7 +90,7 @@ def label_matches(cli_label, pattern_label):
     return cli_label in listify(pattern_label)
 
 
-def get_match(input_data, shortcut, label=None, shell=None):
+def get_match(input_data, shortcut, label=None):
     """
     Check if 'input_data' matches the 'shortcut' pattern and if yes, return the
     substituted shell command.
@@ -88,26 +100,31 @@ def get_match(input_data, shortcut, label=None, shell=None):
     if not label_matches(label, shortcut.get('label')):
         return
 
-    # check if the pattern supports the given shell and default to 'shell'
-    if shell in shortcut:
-        script = shortcut[shell]
-    elif 'shell' in shortcut:
-        script = shortcut['shell']
-    else:
-        return None
+    executor_map = {}
 
     if 'match' in shortcut:
         for condition in listify(shortcut['match']):
             result = parse.parse(condition, input_data)
-            if result is not None:
-                return script.format(*result.fixed, **result.named)
+            if result is None:
+                continue
+            executor_map.update({
+                executor: shortcut[executor].format(
+                    *result.fixed, **result.named)
+                for executor in AVAILABLE_EXECUTORS
+                if executor in shortcut
+            })
 
     if 'regex' in shortcut:
         for condition in listify(shortcut['regex']):
             match = re.match(condition, input_data)
-            if match:
-                return script.format(*match.groups())
-    return None
+            if not match:
+                continue
+            executor_map.update({
+                executor: shortcut[executor].format(*match.groups())
+                for executor in AVAILABLE_EXECUTORS
+                if executor in shortcut
+            })
+    return executor_map or None
 
 
 def get_active_shell():
