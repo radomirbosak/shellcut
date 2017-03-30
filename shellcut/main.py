@@ -172,19 +172,13 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def main():
-    # load CLI arguments
-    args = parse_arguments()
+def choose_single_match(possible_matches):
+    """
+    Get the list of possible matches and decide for the correct one
 
-    env_shell = get_active_shell()
-
-    # load and check shortcuts
-    shortcuts = load_shortcuts(get_config_dirs())
-    possible_matches = check_shortcuts(args.input, shortcuts,
-                                       label=args.label,
-                                       shell=env_shell)
-
-    # if the function returned no matches, exit
+    Returns:
+        command_string: the command to run
+    """
     if not possible_matches:
         print('Input matches none of the patterns')
         sys.exit(1)
@@ -200,6 +194,23 @@ def main():
             sys.exit(1)
     else:
         _, command_string = possible_matches[0]
+
+    return command_string
+
+
+def main():
+    # load CLI arguments
+    args = parse_arguments()
+    env_shell = get_active_shell()
+
+    # load and check shortcuts
+    shortcuts = load_shortcuts(get_config_dirs())
+    possible_matches = check_shortcuts(args.input, shortcuts,
+                                       label=args.label,
+                                       shell=env_shell)
+
+    # if the function returned no matches, exit
+    command_string = choose_single_match(possible_matches)
 
     # execute the script using the discovered shell (default: sh)
     shell_cmd = env_shell if env_shell is not None else 'sh'

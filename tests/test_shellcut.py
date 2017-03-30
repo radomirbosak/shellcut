@@ -475,3 +475,60 @@ class TestShellcut(TestCase):
         """
         with self.assertRaises(SystemExit):
             main.parse_arguments()
+
+    def test_choose_single_match_no_match(self):
+        """
+        Test no possible match exits the program
+        """
+        with self.assertRaises(SystemExit):
+            main.choose_single_match([])
+
+    def test_choose_single_match_single(self):
+        """
+        Test single possible match is chosen
+        """
+        possible_matches = [('shortcut-struct', 'command-to-run')]
+        result = main.choose_single_match(possible_matches)
+        self.assertEqual(result, 'command-to-run')
+
+    @patch('shellcut.main.choose_match')
+    def test_choose_single_match_multiple(self, mock_choose):
+        """
+        Test the right match from multiple is chosen
+        """
+        mock_choose.return_value = 'command2'
+        possible_matches = [
+            ('shortcut1', 'command1'),
+            ('shortcut2', 'command2'),
+            ('shortcut3', 'command3'),
+        ]
+        result = main.choose_single_match(possible_matches)
+        self.assertEqual(result, 'command2')
+
+    @patch('shellcut.main.choose_match')
+    def test_choose_single_match_multiple_valuerror(self, mock_choose):
+        """
+        Test a ValueError during choice exits the program
+        """
+        mock_choose.side_effect = ValueError()
+        possible_matches = [
+            ('shortcut1', 'command1'),
+            ('shortcut2', 'command2'),
+            ('shortcut3', 'command3'),
+        ]
+        with self.assertRaises(SystemExit):
+            main.choose_single_match(possible_matches)
+
+    @patch('shellcut.main.choose_match')
+    def test_choose_single_match_multiple_keybint(self, mock_choose):
+        """
+        Test a KeyboardInterrup during choice exits the program
+        """
+        mock_choose.side_effect = KeyboardInterrupt()
+        possible_matches = [
+            ('shortcut1', 'command1'),
+            ('shortcut2', 'command2'),
+            ('shortcut3', 'command3'),
+        ]
+        with self.assertRaises(SystemExit):
+            main.choose_single_match(possible_matches)
