@@ -4,6 +4,7 @@ import re
 import os
 import sys
 import glob
+import argparse
 import subprocess
 
 import yaml
@@ -160,17 +161,27 @@ def choose_match(possible_matches):
         raise ValueError('Invalid choice')
 
 
+def parse_arguments():
+    """
+    Parse CLI arguments
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input')
+    parser.add_argument('label', nargs='?')
+
+    return parser.parse_args()
+
+
 def main():
     # load CLI arguments
-    u = sys.argv[1]
-    label = sys.argv[2] if len(sys.argv) >= 3 else None
+    args = parse_arguments()
 
     env_shell = get_active_shell()
 
     # load and check shortcuts
     shortcuts = load_shortcuts(get_config_dirs())
-    possible_matches = check_shortcuts(u, shortcuts,
-                                       label=label,
+    possible_matches = check_shortcuts(args.input, shortcuts,
+                                       label=args.label,
                                        shell=env_shell)
 
     # if the function returned no matches, exit

@@ -468,3 +468,10 @@ class TestShellcut(TestCase):
         mock_input.return_value = 'abc'
         with self.assertRaises(ValueError):
             main.choose_match(matches)
+
+    def test_parse_arguments_noargs(self):
+        """
+        Test running with no arguments ends the program (with a help message)
+        """
+        with self.assertRaises(SystemExit):
+            main.parse_arguments()
