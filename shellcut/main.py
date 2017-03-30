@@ -97,17 +97,13 @@ def get_match(input_data, shortcut, label=None, shell=None):
         return None
 
     if 'match' in shortcut:
-        conditions = shortcut['match']
-        # check if any condition matches
-        for condition in listify(conditions):
+        for condition in listify(shortcut['match']):
             result = parse.parse(condition, input_data)
             if result is not None:
                 return script.format(*result.fixed, **result.named)
 
     if 'regex' in shortcut:
-        conditions = shortcut['regex']
-        # check if any condition matches
-        for condition in listify(conditions):
+        for condition in listify(shortcut['regex']):
             match = re.match(condition, input_data)
             if match:
                 return script.format(*match.groups())
