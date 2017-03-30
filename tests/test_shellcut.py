@@ -18,14 +18,17 @@ class TestShellcut(TestCase):
         """
         mock_get_match.side_effect = [
             {},
-            {'shell': 'command2'},
+            {'shell2': 'command2'},
             {'shell3': 'command3'}
         ]
 
         shortcuts = ['shortcut1', 'shortcut2', 'shortcut3']
         result = main.check_shortcuts('input_data', shortcuts, label=None)
 
-        expected_result = [('shortcut2', 'command2')]
+        expected_result = [
+            ('shortcut2', {'shell2': 'command2'}),
+            ('shortcut3', {'shell3': 'command3'})
+        ]
         self.assertEqual(result, expected_result)
 
     def test_label_matches_no_cli_label(self):

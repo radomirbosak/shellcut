@@ -49,7 +49,7 @@ def load_shortcuts(configdirs):
     return shortcuts
 
 
-def check_shortcuts(input_data, shortcuts, label=None, shell=None):
+def check_shortcuts(input_data, shortcuts, label=None):
     """
     Returns the shortcuts matching input_data
 
@@ -62,16 +62,9 @@ def check_shortcuts(input_data, shortcuts, label=None, shell=None):
     for shortcut in shortcuts:
         executor_map = get_match(input_data, shortcut, label)
         # check if the pattern supports the given shell and default to 'shell'
-        if executor_map is None:
-            continue
-        elif shell in executor_map:
-            script = executor_map[shell]
-        elif 'shell' in executor_map:
-            script = executor_map['shell']
-        else:
-            continue
 
-        possible.append((shortcut, script))
+        if executor_map:
+            possible.append((shortcut, executor_map))
 
     return possible
 
@@ -220,11 +213,16 @@ def main():
     # load and check shortcuts
     shortcuts = load_shortcuts(get_config_dirs())
     possible_matches = check_shortcuts(args.input, shortcuts,
-                                       label=args.label,
-                                       shell=env_shell)
+                                       label=args.label)
 
     # if the function returned no matches, exit
-    command_string = choose_single_match(possible_matches)
+    executor_map = choose_single_match(possible_matches)
+    if env_shell in executor_map:
+        command_string = executor_map[env_shell]
+    elif 'shell' in executor_map:
+        command_string = executor_map['shell']
+    else:
+        command_string = ''
 
     # execute the script using the discovered shell (default: sh)
     shell_cmd = env_shell if env_shell is not None else 'sh'
