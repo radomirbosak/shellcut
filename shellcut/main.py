@@ -95,28 +95,32 @@ def get_match(input_data, shortcut, label=None):
 
     executor_map = {}
 
-    if 'match' in shortcut:
-        for condition in listify(shortcut['match']):
-            result = parse.parse(condition, input_data)
-            if result is None:
-                continue
-            executor_map.update({
-                executor: shortcut[executor].format(
-                    *result.fixed, **result.named)
-                for executor in AVAILABLE_EXECUTORS
-                if executor in shortcut
-            })
+    conditions_match = listify(shortcut.get('match', []))
+    conditions_regex = listify(shortcut.get('regex', []))
 
-    if 'regex' in shortcut:
-        for condition in listify(shortcut['regex']):
-            match = re.match(condition, input_data)
-            if not match:
-                continue
-            executor_map.update({
-                executor: shortcut[executor].format(*match.groups())
-                for executor in AVAILABLE_EXECUTORS
-                if executor in shortcut
-            })
+    # fetch executors from match-type patterns
+    for condition in conditions_match:
+        result = parse.parse(condition, input_data)
+        if result is None:
+            continue
+        executor_map.update({
+            executor: shortcut[executor].format(
+                *result.fixed, **result.named)
+            for executor in AVAILABLE_EXECUTORS
+            if executor in shortcut
+        })
+
+    # fetch executors from regex-type patterns
+    for condition in conditions_regex:
+        match = re.match(condition, input_data)
+        if not match:
+            continue
+        executor_map.update({
+            executor: shortcut[executor].format(*match.groups())
+            for executor in AVAILABLE_EXECUTORS
+            if executor in shortcut
+        })
+
     return executor_map or None
 
 
