@@ -8,7 +8,8 @@ setup(
     author='Radomír Bosák',
     author_email='radomir.bosak@gmail.com',
     url='https://github.com/radomirbosak/shellcut',
-    download_url='https://github.com/radomirbosak/shellcut/archive/0.2.1.tar.gz',
+    download_url='https://github.com/radomirbosak/shellcut/archive/'
+                 '0.2.1.tar.gz',
     keywords=['shell', 'shortcuts', 'regex'],
     package_data={'': ['config/default.yaml']},
     entry_points={
