@@ -358,6 +358,7 @@ class TestShellcut(TestCase):
         """
         Test that fish shell gets recognized
         """
+        mock_environ.__contains__.return_value = True
         mock_environ.__getitem__.side_effect = ['/path/to/fish']
 
         shell = main.get_active_shell()
@@ -368,6 +369,7 @@ class TestShellcut(TestCase):
         """
         Test that bash shell gets recognized
         """
+        mock_environ.__contains__.return_value = True
         mock_environ.__getitem__.side_effect = ['/i/am/complicated_bash']
 
         shell = main.get_active_shell()
@@ -378,7 +380,19 @@ class TestShellcut(TestCase):
         """
         Test that an unknown shell returns None
         """
+        mock_environ.__contains__.return_value = True
         mock_environ.__getitem__.side_effect = ['/some/weird/shell']
+
+        shell = main.get_active_shell()
+        self.assertIsNone(shell)
+
+    @patch('shellcut.main.os.environ')
+    def test_get_active_shell_unset(self, mock_environ):
+        """
+        Test that if the SHELL envvar is unset, the function returns None
+        """
+        mock_environ.__contains__.return_value = False
+        mock_environ.__getitem__.side_effect = ['/whatever']
 
         shell = main.get_active_shell()
         self.assertIsNone(shell)

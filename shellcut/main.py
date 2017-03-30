@@ -127,6 +127,9 @@ def get_active_shell():
     Returns:
         'bash' or 'fish' or None
     """
+    if 'SHELL' not in os.environ:
+        return None
+
     env_shell = os.environ['SHELL']
     for shell in ['bash', 'fish']:
         if env_shell.endswith(shell):
