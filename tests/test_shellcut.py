@@ -532,3 +532,16 @@ class TestShellcut(TestCase):
         ]
         with self.assertRaises(SystemExit):
             main.choose_single_match(possible_matches)
+
+    def test_listify(self):
+        """
+        Test that the listify function works correctly
+        """
+        res = main.listify([])
+        self.assertEqual(res, [])
+
+        res = main.listify('a')
+        self.assertEqual(res, ['a'])
+
+        res = main.listify([1, 2, 3])
+        self.assertEqual(res, [1, 2, 3])

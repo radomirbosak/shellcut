@@ -198,6 +198,14 @@ def choose_single_match(possible_matches):
     return command_string
 
 
+def listify(element):
+    """
+    Returns the argument if it's a list, otherwise a new list containing only
+    this one element.
+    """
+    return element if isinstance(element, list) else [element]
+
+
 def main():
     # load CLI arguments
     args = parse_arguments()
