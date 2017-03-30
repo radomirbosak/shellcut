@@ -107,12 +107,12 @@ class TestShellcut(TestCase):
         """
         shortcut = {
             'match': 'input_data',
-            'shell': 'command',
+            'bash': 'command',
             'label': ['l1', 'l2']
         }
 
         result = main.get_match('input_data', shortcut, label='l2')
-        self.assertEqual(result, {'shell': 'command'})
+        self.assertEqual(result, {'bash': 'command'})
 
     def test_get_match_multilabel_fail(self):
         """
@@ -134,11 +134,11 @@ class TestShellcut(TestCase):
         """
         shortcut = {
             'match': 'My name is {} Potter',
-            'shell': 'echo "Hello {}!"',
+            'bash': 'echo "Hello {}!"',
         }
         input_data = 'My name is Harry Potter'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, {'shell': 'echo "Hello Harry!"'})
+        self.assertEqual(result, {'bash': 'echo "Hello Harry!"'})
 
     def test_get_match_parse_regex(self):
         """
@@ -146,11 +146,11 @@ class TestShellcut(TestCase):
         """
         shortcut = {
             'regex': r'My name is (\w+) Potter',
-            'shell': 'echo "Hello {}!"',
+            'bash': 'echo "Hello {}!"',
         }
         input_data = 'My name is Harry Potter'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, {'shell': 'echo "Hello Harry!"'})
+        self.assertEqual(result, {'bash': 'echo "Hello Harry!"'})
 
     def test_get_match_parse_no_match(self):
         """
@@ -158,7 +158,7 @@ class TestShellcut(TestCase):
         """
         shortcut = {
             'match': r'My name is {} Potter',
-            'shell': 'echo "Hello {}!"',
+            'bash': 'echo "Hello {}!"',
         }
         input_data = "My name isn't Harry Potter"
         result = main.get_match(input_data, shortcut)
@@ -170,7 +170,7 @@ class TestShellcut(TestCase):
         """
         shortcut = {
             'match': r'My name is (\w+) Potter',
-            'shell': 'echo "Hello {}!"',
+            'bash': 'echo "Hello {}!"',
         }
         input_data = 'My name is not Harry Potter'
         result = main.get_match(input_data, shortcut)
@@ -182,11 +182,11 @@ class TestShellcut(TestCase):
         """
         shortcut = {
             'match': ['m1', 'm2'],
-            'shell': 'result'
+            'bash': 'result'
         }
         input_data = 'm1'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, {'shell': 'result'})
+        self.assertEqual(result, {'bash': 'result'})
 
     def test_get_match_multiple_match_fail(self):
         """
@@ -206,11 +206,11 @@ class TestShellcut(TestCase):
         """
         shortcut = {
             'regex': ['m1', 'm2'],
-            'shell': 'result'
+            'bash': 'result'
         }
         input_data = 'm1'
         result = main.get_match(input_data, shortcut)
-        self.assertEqual(result, {'shell': 'result'})
+        self.assertEqual(result, {'bash': 'result'})
 
     def test_get_match_multiple_regex_fail(self):
         """
@@ -321,50 +321,6 @@ class TestShellcut(TestCase):
 
         tmpdir1.cleanup()
         tmpdir2.cleanup()
-
-    @patch('shellcut.main.os.environ')
-    def test_get_active_shell_fish(self, mock_environ):
-        """
-        Test that fish shell gets recognized
-        """
-        mock_environ.__contains__.return_value = True
-        mock_environ.__getitem__.side_effect = ['/path/to/fish']
-
-        shell = main.get_active_shell()
-        self.assertEqual(shell, 'fish')
-
-    @patch('shellcut.main.os.environ')
-    def test_get_active_shell_bash(self, mock_environ):
-        """
-        Test that bash shell gets recognized
-        """
-        mock_environ.__contains__.return_value = True
-        mock_environ.__getitem__.side_effect = ['/i/am/complicated_bash']
-
-        shell = main.get_active_shell()
-        self.assertEqual(shell, 'bash')
-
-    @patch('shellcut.main.os.environ')
-    def test_get_active_shell_unknown(self, mock_environ):
-        """
-        Test that an unknown shell returns None
-        """
-        mock_environ.__contains__.return_value = True
-        mock_environ.__getitem__.side_effect = ['/some/weird/shell']
-
-        shell = main.get_active_shell()
-        self.assertIsNone(shell)
-
-    @patch('shellcut.main.os.environ')
-    def test_get_active_shell_unset(self, mock_environ):
-        """
-        Test that if the SHELL envvar is unset, the function returns None
-        """
-        mock_environ.__contains__.return_value = False
-        mock_environ.__getitem__.side_effect = ['/whatever']
-
-        shell = main.get_active_shell()
-        self.assertIsNone(shell)
 
     @patch('shellcut.main.os.environ')
     def test_get_config_dirs_envset(self, mock_environ):

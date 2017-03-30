@@ -13,7 +13,7 @@ import parse
 from xdg import XDG_CONFIG_HOME
 
 
-AVAILABLE_EXECUTORS = ['bash', 'fish', 'shell', 'python']
+AVAILABLE_EXECUTORS = ['bash', 'fish', 'python']
 
 
 def get_config_dirs():
@@ -120,23 +120,6 @@ def get_match(input_data, shortcut, label=None):
     return executor_map or None
 
 
-def get_active_shell():
-    """
-    Get the shell which the user is using
-
-    Returns:
-        'bash' or 'fish' or None
-    """
-    if 'SHELL' not in os.environ:
-        return None
-
-    env_shell = os.environ['SHELL']
-    for shell in ['bash', 'fish']:
-        if env_shell.endswith(shell):
-            return shell
-    return None
-
-
 def get_input(text):
     """
     Wrapper for python's input builtin
@@ -208,7 +191,6 @@ def listify(element):
 def main():
     # load CLI arguments
     args = parse_arguments()
-    env_shell = get_active_shell()
 
     # load and check shortcuts
     shortcuts = load_shortcuts(get_config_dirs())
@@ -217,16 +199,10 @@ def main():
 
     # if the function returned no matches, exit
     executor_map = choose_single_match(possible_matches)
-    if env_shell in executor_map:
-        command_string = executor_map[env_shell]
-    elif 'shell' in executor_map:
-        command_string = executor_map['shell']
-    else:
-        command_string = ''
 
-    # execute the script using the discovered shell (default: sh)
-    shell_cmd = env_shell if env_shell is not None else 'sh'
-    subprocess.call([shell_cmd, "-c", command_string])
+    # run all executors
+    for command, script in executor_map.items():
+        subprocess.call([command, "-c", script])
 
 
 if __name__ == '__main__':
