@@ -28,7 +28,7 @@ For more examples, navigate to [documentation](docs/usage.md).
 
 ## Installation
 ```
-pip3 install . --user
+pip install shellcut
 ```
 
 ## Testing
