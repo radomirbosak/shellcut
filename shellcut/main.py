@@ -10,7 +10,10 @@ import subprocess
 import yaml
 import parse
 
-from xdg import XDG_CONFIG_HOME
+try:
+    from xdg import XDG_CONFIG_HOME
+except ImportError:
+    XDG_CONFIG_HOME = '~/.config'
 
 
 AVAILABLE_EXECUTORS = ['bash', 'fish', 'python']
