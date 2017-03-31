@@ -1,4 +1,4 @@
-# Shellcut [![Build Status](https://travis-ci.org/radomirbosak/shellcut.svg?branch=master)](https://travis-ci.org/radomirbosak/shellcut)
+# Shellcut [![Build Status](https://travis-ci.org/radomirbosak/shellcut.svg?branch=master)](https://travis-ci.org/radomirbosak/shellcut) [![Version](http://img.shields.io/pypi/v/shellcut.svg?style=flat)](https://pypi.python.org/pypi/shellcut/)
 
 _Shell shortcuts_
 
