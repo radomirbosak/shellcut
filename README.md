@@ -27,7 +27,7 @@ shortcuts:
 For more examples, navigate to [documentation](docs/usage.md).
 
 ## Installation
-```
+```console
 pip install shellcut
 ```
 
